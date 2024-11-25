@@ -8,7 +8,7 @@ transform_type: ???
 areas: {
   NFI: {
     type: object,
-    pt_files: [2014/*/*.las, 2018/*/*.las, 2019/*/*.las],
+    pt_files: [2014/*/*.laz],
     label_files: nfi.gpkg,
     check_pt_crs: False,
     pt_identifier: las_file

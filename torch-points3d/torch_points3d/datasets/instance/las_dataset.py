@@ -579,6 +579,21 @@ class LasDataset(BaseDataset):
         test_set_avail = any(
             [len(area["labels"].query(f"{area['split_col']} == 'test'")) > 0 for area in self.areas.values()])
 
+        for area_name, area in self.areas.items():
+            train_labels_count = len(area["labels"].query(f"{area['split_col']} == 'train'"))
+            print(f"Area: {area_name}, Train Labels Count: {train_labels_count}")
+
+            print(f"Inspecting area: {area_name}")
+            print(f"split_col: {area['split_col']}")
+            print(f"DataFrame columns: {area['labels'].columns}")
+            print(f"Unique values in {area['split_col']} for area {area_name}: {area['labels'][area['split_col']].unique()}")
+            filtered_rows_direct = area["labels"][area["labels"][area["split_col"]] == "train"]
+            train_labels_count_direct = len(filtered_rows_direct)
+            print(f"Train Labels Count (Direct Filter) for {area_name}: {train_labels_count_direct}")
+            print(f"Filtered Rows (Direct Filter) for {area_name}:")
+            print(filtered_rows_direct)
+
+
         if save_processed:
             (self._data_path / (Path(processed_folder))).mkdir(exist_ok=True)
 
@@ -586,6 +601,7 @@ class LasDataset(BaseDataset):
         feature_scaling_dict = torch.load(feature_scaling_file) if feature_scaling_file.exists() else None
 
         assert train_set_avail or val_set_avail or test_set_avail, "Apparently no data available"
+        print(train_set_avail)
 
         pos_dict = {}
         pos_tree_dict = {}
@@ -596,10 +612,26 @@ class LasDataset(BaseDataset):
                 train_subset_remove = 1 - train_subset
                 for area in self.areas.values():
                     idx = area["labels"].query(f"{area['split_col']} == 'train'").index
+                    print(idx)
                     idx = np.random.choice(idx, int(len(idx) * train_subset_remove), replace=False)
                     area["labels"].drop(index=idx, inplace=True)
 
             log.info("Init train dataset")
+
+            # Debug: Log all parameters passed to the Las class
+            log.info(f"Data Path: {self._data_path}")
+            log.info(f"Areas: {self.areas}")
+            log.info(f"Split: train")
+            log.info(f"Targets: {self.targets}")
+            log.info(f"Feature Columns: {self.features}")
+            log.info(f"Save Processed: {save_processed}")
+            log.info(f"Processed Folder: {processed_folder}")
+            log.info(f"In Memory: {in_memory}")
+            log.info(f"XY Radius: {self.xy_radius}")
+            log.info(f"Save Local Stats: {save_local_stats}")
+            log.info(f"Min Points Outer: {self.min_pts_outer}")
+            log.info(f"Min Points Inner: {self.min_pts_inner}")
+
             self.train_dataset = Las(
                 self._data_path, areas=self.areas, split="train",
                 targets=self.targets, feature_cols=self.features, feature_scaling_dict=feature_scaling_dict,
@@ -708,6 +740,7 @@ class LasDataset(BaseDataset):
                 pt_files = labels["pt_file"].values.tolist()
 
             area["pt_files"] = pt_files
+            print(pt_files)
 
             split_col = area.get("split_col", dataset_opt.get("split_col", "split"))
             area["split_col"] = split_col
@@ -767,6 +800,7 @@ class LasDataset(BaseDataset):
             label_files = [label_files]
 
         assert len(label_files) > 0, f"no labels given, check area {area_name}"
+        print(label_files)
 
         labels = None
         for lf in label_files:
@@ -909,10 +943,12 @@ class LasDataset(BaseDataset):
             sc = self.areas[area_name]["split_col"]
             labels = self.areas[area_name]["labels"]
             area_dict = {}
-            if self.train_dataset is not None and labels.query(f"{sc} == 'val'").shape[0] > 1:
+
+            if self.train_dataset is not None and labels.query(f"{sc} == 'train'").shape[0] > 1:
                 values = labels.query(f"{sc} == 'train'")[targets].values
                 area_dict.update({"train": stat_fn(values, 0), })
                 dict["total"]["train"].append(values)
+                print(values)
             if self.val_dataset is not None and labels.query(f"{sc} == 'val'").shape[0] > 1:
                 values = labels.query(f"{sc} == 'val'")[targets].values
                 area_dict.update({"val": stat_fn(values, 0), })
