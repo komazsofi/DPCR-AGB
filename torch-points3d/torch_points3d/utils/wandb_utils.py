@@ -47,6 +47,9 @@ class Wandb:
 
             Wandb.IS_ACTIVE = True
 
+            cfg.training.wandb.project="nfi"
+            print(cfg.training.wandb)
+
             model_config = getattr(cfg.models, cfg.model_name, None)
             model_class = getattr(model_config, "class", "loaded model")
             tested_dataset_class = getattr(cfg.data, "class")
