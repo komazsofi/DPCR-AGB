@@ -19,6 +19,6 @@ defaults:
 
 processed_folder: "processed_nfi_reg"
 targets: {
-  V_ha: { task: regression, weight: 0.5 },
+  VOLMB: { task: regression, weight: 0.5 },
 } # metrics: m m cm
 
