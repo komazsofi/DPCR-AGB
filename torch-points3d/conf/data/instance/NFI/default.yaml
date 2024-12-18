@@ -8,13 +8,13 @@ transform_type: ???
 areas: {
   NFI: {
     type: object,
-    pt_files: [clip_plots_forDL_test/*/*.laz],
+    pt_files: [2014/*/*.laz],
     label_files: nfi.gpkg,
     check_pt_crs: False,
     pt_identifier: las_file
   },
 }
-xy_radius: 9
+xy_radius: 8
 x_scale: 30
 y_scale: 30
 z_scale: 40
