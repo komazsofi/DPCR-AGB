@@ -5,7 +5,7 @@ library(sf)
 source("/home/zsko/.creditals.R")
 
 # Define directories
-laz_directory <- "/disks/normal/laserdata2/SR16_DL/test_prep_dec2024/clip_plots_forDL_test2_dummy/"        # Replace with the directory containing .laz files
+laz_directory <- "/disks/normal/laserdata2/SR16_DL/test_prep_dec2024/clip_plots_forDL_test_org_2/"        # Replace with the directory containing .laz files
 output_directory <- "/disks/normal/laserdata2/SR16_DL/test_prep_dec2024/" # Updated to separate metadata output directory
 server_dir <- "/home/nibio/DPCR-AGB/torch-points3d/data/biomass/raw/2014/region1"
 
@@ -81,7 +81,8 @@ laz_sf <- laz_data %>%
 
 # Remove the first row from the sf object
 laz_sf <- laz_sf[-1, ]
+print(head(laz_sf))
 
 # Export as GeoPackage
-gpkg_path <- file.path(output_directory, "laz_data_test2_dummy.gpkg")
+gpkg_path <- file.path(output_directory, "laz_data_test4_dummy.gpkg")
 st_write(laz_sf, gpkg_path, delete_dsn = TRUE)
