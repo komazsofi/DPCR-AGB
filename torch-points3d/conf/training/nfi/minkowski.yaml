@@ -1,6 +1,6 @@
 # @package training
 # Those arguments defines the training hyper-parameters
-epochs: 100
+epochs: 310
 num_workers: 2
 batch_size: 8
 cuda: 0
