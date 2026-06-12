@@ -1,0 +1,23 @@
+# @package data
+defaults:
+  - instance/default
+  - instance/CAN/default
+  - instance/NFI/transforms/xy
+  - instance/NFI/transforms/xy-treeadd-eval
+  - instance/NFI/transforms/xy-eval
+  - instance/NFI/transforms/sparse
+  - instance/NFI/transforms/sparse-xy
+  - instance/NFI/transforms/sparse-ori
+  - instance/NFI/transforms/sparse-eval
+  - instance/NFI/transforms/sparse-xy-eval
+  - instance/NFI/transforms/sparse-treeadd-eval
+  - instance/NFI/transforms/sparse-xy-treeadd-eval
+  - instance/NFI/transforms/fixed
+  - instance/NFI/transforms/fixed-xy
+  - instance/NFI/transforms/fixed-xy-treeadd-eval
+  - instance/NFI/transforms/fixed-xy-eval
+
+processed_folder: "processed_can_reg"
+targets: {
+  VOLMB: { task: regression, weight: 1.0 },
+}
