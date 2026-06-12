@@ -47,6 +47,9 @@ class KPConv(InstanceBase):
         in_channel = self.model.head_mlp.mlp.weight.shape[1]
         self.head = self.init_head(in_channel)
 
+        self.has_mol_targets = dataset.has_mol_targets
+        self.has_cls_targets = dataset.has_cls_targets
+
         self.dataset_num_points = dataset.dataset_opt.fixed.num_points
         self.model_num_points = option.get("num_points", None)
         if self.model_num_points is None:

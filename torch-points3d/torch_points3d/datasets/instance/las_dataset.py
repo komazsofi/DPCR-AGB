@@ -33,12 +33,18 @@ def read_pt(pt_file, feature_cols, delimiter: str):
     crs = None
     has_features = len(feature_cols) > 0
     if Path(pt_file).suffix in [".las", ".laz"]:
-        backend = laspy.compression.LazBackend(0)
-        if not backend.is_available():
-            backend = laspy.compression.LazBackend(1)
-            if not backend.is_available():
-                backend = laspy.compression.LazBackend(2)
-        loaded_file = laspy.read(pt_file, laz_backend=backend)
+        # Try backends in order: LazrsParallel(0), Lazrs(1), Laszip(2)
+        loaded_file = None
+        for backend_id in [0, 1, 2]:
+            backend = laspy.compression.LazBackend(backend_id)
+            if backend.is_available():
+                try:
+                    loaded_file = laspy.read(pt_file, laz_backend=backend)
+                    break
+                except Exception:
+                    continue
+        if loaded_file is None:
+            loaded_file = laspy.read(pt_file)
         pos = np.stack([loaded_file.x, loaded_file.y, loaded_file.z], 1)
         if has_features:
             features = np.stack([getattr(loaded_file, feature) for feature in feature_cols], 1)

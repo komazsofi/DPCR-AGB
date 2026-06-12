@@ -1,7 +1,7 @@
 # @package data
 defaults:
   - instance/default
-  - instance/NFI/default
+  - instance/NOR/default
   - instance/NFI/transforms/xy
   - instance/NFI/transforms/xy-treeadd-eval
   - instance/NFI/transforms/xy-eval
@@ -17,9 +17,7 @@ defaults:
   - instance/NFI/transforms/fixed-xy-treeadd-eval
   - instance/NFI/transforms/fixed-xy-eval
 
-processed_folder: "processed_nfi_reg"
+processed_folder: "processed_nor_reg"
 targets: {
-  total_BMag_ha: { task: regression, weight: 0.5 },
-  VOLMB: { task: regression, weight: 0.5 },
-} # metrics: m m cm
-
+  VOLMB: { task: regression, weight: 1.0 },
+}
