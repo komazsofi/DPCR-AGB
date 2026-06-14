@@ -53,21 +53,16 @@ def plot(merged, target, out_path):
     r2, mae, rmse, bias = compute_metrics(obs, pred)
 
     fig, ax = plt.subplots(figsize=(7, 7))
-    ax.scatter(obs, pred, alpha=0.3, s=10, color="steelblue", label=f"n={len(obs)}")
+    ax.scatter(pred, obs, alpha=0.3, s=10, color="steelblue", label=f"n={len(obs)}")
 
-    # 1:1 line
+    # 1:1 line only
     lim = [min(obs.min(), pred.min()) * 0.95, max(obs.max(), pred.max()) * 1.05]
-    ax.plot(lim, lim, "k--", linewidth=1, label="1:1 line")
-
-    # regression line
-    m, b = np.polyfit(obs, pred, 1)
-    x_fit = np.array(lim)
-    ax.plot(x_fit, m * x_fit + b, "r-", linewidth=1.5, label=f"Fit (slope={m:.2f})")
+    ax.plot(lim, lim, "k--", linewidth=1.5, label="1:1 line")
 
     stats_txt = f"R²={r2:.3f}  RMSE={rmse:.1f}  MAE={mae:.1f}  Bias={bias:.1f}"
-    ax.set_title(f"Predicted vs Observed — {target}\n{stats_txt}", fontsize=11)
-    ax.set_xlabel(f"Observed {target}")
-    ax.set_ylabel(f"Predicted {target}")
+    ax.set_title(f"Observed vs Predicted — {target}\n{stats_txt}", fontsize=11)
+    ax.set_xlabel(f"Predicted {target}")
+    ax.set_ylabel(f"Observed {target}")
     ax.set_xlim(lim); ax.set_ylim(lim)
     ax.legend(fontsize=9)
     ax.grid(True, alpha=0.3)

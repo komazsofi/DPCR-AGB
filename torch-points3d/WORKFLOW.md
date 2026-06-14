@@ -133,7 +133,7 @@ $PYTHON eval.py \
 
 ```bash
 # Find the predictions CSV
-PRED=$(find $CKPT/eval -name "*.csv" | tail -1)
+PRED=$(find $CKPT/eval -name "*_test_preds.csv" | tail -1)
 
 # CAN dataset
 $PYTHON plot_predictions.py \
