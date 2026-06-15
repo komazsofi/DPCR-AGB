@@ -32,8 +32,14 @@ def load_data(pred_csv, labels_csv_or_gpkg, target):
 
     label_df.index = label_df.index  # keep original integer index
 
+    # Extra identifier columns to carry through if present
+    id_cols = [c for c in ["FLATEID", "project", "plot_id", "split"] if c in label_df.columns]
+
     # Join on index (label_idx in pred maps to row index in label file)
-    merged = pred_df.join(label_df[[target]].rename(columns={target: f"{target}_obs"}), how="inner")
+    merged = pred_df.join(
+        label_df[[target] + id_cols].rename(columns={target: f"{target}_obs"}),
+        how="inner"
+    )
     merged = merged.dropna(subset=[target, f"{target}_obs"])
     return merged
 
@@ -76,9 +82,11 @@ def plot(merged, target, out_path):
     print(f"  Bias = {bias:.2f}")
     print(f"  n    = {len(obs)}")
 
-    # Save merged table too
+    # Save merged table with identifiers + obs + pred
     table_path = out_path.with_suffix(".csv")
-    merged[[f"{target}_obs", target]].rename(columns={target: f"{target}_pred"}).to_csv(table_path)
+    id_cols = [c for c in ["FLATEID", "project", "plot_id", "split"] if c in merged.columns]
+    save_cols = id_cols + [f"{target}_obs", target]
+    merged[save_cols].rename(columns={target: f"{target}_pred"}).to_csv(table_path)
     print(f"Saved obs/pred table to: {table_path}")
 
 
